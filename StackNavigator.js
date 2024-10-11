@@ -19,13 +19,20 @@ const Tab = createBottomTabNavigator();
 
 function BottomTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: {
+          height: 70, // ปรับความสูงของแท็บบาร์
+          paddingBottom: 10, // เพิ่ม padding ด้านล่างเพื่อเว้นระยะ
+        },
+        headerShown: false, // ซ่อน Header ของ Tab.Navigator
+      }}
+    >
       <Tab.Screen
         name="HomeTab"
         component={Homescreen}
         options={{
           tabBarLabel: "Home",
-          headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Entypo name="home" size={24} color="black" />
@@ -39,7 +46,6 @@ function BottomTabs() {
         component={NontiScreen}
         options={{
           tabBarLabel: "Nonti",
-          headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Ionicons name="notifications-sharp" size={24} color="black" />
@@ -53,7 +59,6 @@ function BottomTabs() {
         component={ProfileScreen}
         options={{
           tabBarLabel: "Profile",
-          headerShown: false,
           tabBarIcon: ({ focused }) =>
             focused ? (
               <Ionicons name="person" size={24} color="black" />
@@ -69,10 +74,34 @@ function BottomTabs() {
 const StackNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Main">
-        <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }} />
-        <Stack.Screen name="Booking" component={BookingScreen} options={{ title: 'Booking Room' }} />
-        <Stack.Screen name="BookingDetail" component={BookingDetail} options={{ title: 'Booking Detail' }} />
+      <Stack.Navigator
+        initialRouteName="Main"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#4CAF50', // สีพื้นหลังของ Header
+          },
+          headerTintColor: '#fff', // สีของข้อความใน Header
+          headerTitleStyle: {
+            fontWeight: 'bold', // ปรับแต่ง Style ของ Title
+          },
+          headerTitle: 'Music Rooms', // ตั้งชื่อ Header ให้คงที่เป็น "Music Rooms"
+        }}
+      >
+        <Stack.Screen 
+          name="Main" 
+          component={BottomTabs} 
+          options={{ headerShown: true }} 
+        />
+        <Stack.Screen 
+          name="Booking" 
+          component={BookingScreen} 
+          options={{ headerShown: true }} 
+        />
+        <Stack.Screen 
+          name="BookingDetail" 
+          component={BookingDetail} 
+          options={{ headerShown: true }} 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
