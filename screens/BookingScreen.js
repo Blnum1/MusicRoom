@@ -1,4 +1,3 @@
-// BookingScreen.js
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -13,14 +12,14 @@ const BookingScreen = () => {
         {/* Room 1 */}
         <View style={styles.roomCard}>
           <Image 
-            source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzX9J_mHk97kurmw6l-yILcXjOzuJiVHb3fQ&s' }} // เปลี่ยน URL ให้เป็น URL รูปห้องที่คุณต้องการ
+            source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzX9J_mHk97kurmw6l-yILcXjOzuJiVHb3fQ&s' }} // URL of the room image
             style={styles.roomImage}
           />
-          <Text style={styles.roomName}>Room 1</Text>
-          <Text style={styles.roomDetail}>DETAIL.....</Text>
+          <Text style={styles.roomName}>Rehearsal Room 1</Text>
+          <Text style={styles.roomDetail}>This is a spacious room perfect for music rehearsals.</Text>
           <TouchableOpacity 
             style={styles.bookButton} 
-            onPress={() => navigation.navigate('BookingDetail', { roomName: 'Room 1' })}
+            onPress={() => navigation.navigate('BookingDetail', { roomName: 'Rehearsal Room 1' })} // Navigate to BookingDetail and pass roomName as a parameter
           >
             <Text style={styles.bookButtonText}>Select Time</Text>
           </TouchableOpacity>
@@ -29,15 +28,15 @@ const BookingScreen = () => {
         {/* Room 2 */}
         <View style={styles.roomCard}>
           <Image 
-            source={{ uri: 'https://f.ptcdn.info/112/003/000/1363186454-L-o.jpg' }} // เปลี่ยน URL ให้เป็น URL รูปห้องที่คุณต้องการ
+            source={{ uri: 'https://f.ptcdn.info/112/003/000/1363186454-L-o.jpg' }} // URL of the room image
             style={styles.roomImage}
           />
-          <Text style={styles.roomName}>Room 2</Text>
-          <Text style={styles.roomDetail}>DETAIL.....</Text>
+          <Text style={styles.roomName}>Rehearsal Room 2</Text>
+          <Text style={styles.roomDetail}>A cozy room suitable for small groups.</Text>
 
           <TouchableOpacity 
             style={styles.bookButton} 
-            onPress={() => navigation.navigate('BookingDetail', { roomName: 'Room 2' })}
+            onPress={() => navigation.navigate('BookingDetail', { roomName: 'Rehearsal Room 2' })} // Navigate to BookingDetail and pass roomName as a parameter
           >
             <Text style={styles.bookButtonText}>Select Time</Text>
           </TouchableOpacity>
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
   },
   roomDetail: {
     fontSize: 16,
-    textAlign: 'left'
+    textAlign: 'left',
   },
   bookButton: {
     marginTop: 10,

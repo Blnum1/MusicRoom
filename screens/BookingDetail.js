@@ -1,34 +1,42 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
+import { useRoute } from '@react-navigation/native'; // Use this to get room name passed from BookingScreen
 
-const BookingScreen = () => {
+const BookingDetail = () => {
+  const route = useRoute();
+  const { roomName } = route.params; // Get the room name passed from the BookingScreen
   const [selectedSlot, setSelectedSlot] = useState('');
-  
-  // สร้างข้อมูล slot พร้อมกับสถานะว่าสามารถจองได้หรือไม่
+
+  // Available slots (can be dynamic based on the room)
   const slots = [
     { label: '9:00 AM', value: '9:00 AM', available: true },
     { label: '10:00 AM', value: '10:00 AM', available: false },
     { label: '11:00 AM', value: '11:00 AM', available: true },
     { label: '12:00 PM', value: '12:00 PM', available: false },
   ];
-  
-  const roomName = "Rehearsal Room 1";
 
   const confirmBooking = () => {
-    console.log('Selected Slot:', selectedSlot);
+    if (selectedSlot) {
+      console.log(`Booked ${roomName} at ${selectedSlot}`);
+    } else {
+      console.log('Please select a time slot');
+    }
   };
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
+        {/* Dynamic room image based on the room */}
         <Image 
-          source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzX9J_mHk97kurmw6l-yILcXjOzuJiVHb3fQ&s' }} 
+          source={{ uri: roomName === 'Rehearsal Room 1' 
+            ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzX9J_mHk97kurmw6l-yILcXjOzuJiVHb3fQ&s' 
+            : 'https://f.ptcdn.info/112/003/000/1363186454-L-o.jpg' }} 
           style={styles.roomImage}
         />
         
         <Text style={styles.title}>{roomName}</Text>
-        <Text style={styles.detail}>DETAIL DETAIL DETAIL</Text>
+        <Text style={styles.detail}>Booking details for {roomName}.</Text>
         
         <Text style={styles.subtitle}>Time Slots Availability:</Text>
         <View style={styles.slotContainer}>
@@ -46,9 +54,8 @@ const BookingScreen = () => {
         </View>
       </ScrollView>
 
-      {/* Container สำหรับ dropdown และปุ่มยืนยัน */}
       <View style={styles.actionContainer}>
-        {/* Dropdown สำหรับเลือกช่วงเวลาที่ต้องการจอง */}
+        {/* Dropdown for selecting a time slot */}
         <View style={styles.pickerContainer}>
           <RNPickerSelect
             onValueChange={(value) => setSelectedSlot(value)}
@@ -92,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   roomImage: {
-    width: '120%',
+    width: '100%',
     height: 210,
     borderRadius: 8,
     marginBottom: 8,
@@ -107,10 +114,10 @@ const styles = StyleSheet.create({
     marginVertical: 1,
   },
   availableSlot: {
-    backgroundColor: '#4CAF50', // สีเขียว (จองได้)
+    backgroundColor: '#4CAF50',
   },
   unavailableSlot: {
-    backgroundColor: '#F44336', // สีแดง (จองไม่ได้)
+    backgroundColor: '#F44336',
   },
   slotText: {
     color: '#fff',
@@ -118,24 +125,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   actionContainer: {
-    flexDirection: 'row', // จัดเรียงในแนวนอน
-    justifyContent: 'space-between', // จัดระยะห่างระหว่าง dropdown และปุ่ม
-    alignItems: 'center', // จัดแนวในแนวตั้ง
-    padding: 10, // เพิ่ม padding
-    marginBottom: 20, // เพิ่มระยะห่างด้านล่าง
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    marginBottom: 20,
   },
   pickerContainer: {
-    flex: 1, // ให้ dropdown มีความกว้างเต็มที่
+    flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    marginRight: 10, // ระยะห่างระหว่าง dropdown กับปุ่ม
+    marginRight: 10,
   },
   confirmButton: {
     backgroundColor: '#4CAF50',
     padding: 10,
     borderRadius: 5,
-    width: '30%', // ตั้งความกว้างของปุ่มให้เล็กกว่า dropdown
+    width: '30%',
   },
   confirmText: {
     color: '#fff',
@@ -166,4 +173,4 @@ const pickerSelectStyles = {
   },
 };
 
-export default BookingScreen;
+export default BookingDetail;

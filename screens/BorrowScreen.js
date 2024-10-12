@@ -1,35 +1,34 @@
-// BorrowScreen.js
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-// ตัวอย่างข้อมูลอุปกรณ์
+// Example equipment data
 const equipmentData = [
   {
     id: '1',
     name: 'Microphone',
     detail: 'High-quality microphone for recording.',
-    image: 'https://example.com/microphone.png', // เปลี่ยนเป็น URL ของรูป
+    image: 'https://example.com/microphone.png',
   },
   {
     id: '2',
     name: 'Guitar',
     detail: 'Acoustic guitar for music rehearsals.',
-    image: 'https://example.com/guitar.png', // เปลี่ยนเป็น URL ของรูป
+    image: 'https://example.com/guitar.png',
   },
   {
     id: '3',
     name: 'Keyboard',
     detail: 'Electric keyboard for performances.',
-    image: 'https://example.com/keyboard.png', // เปลี่ยนเป็น URL ของรูป
+    image: 'https://example.com/keyboard.png',
   },
-  // เพิ่มอุปกรณ์อื่นๆ ตามต้องการ
+  // Add more equipment as needed
 ];
 
 const BorrowScreen = () => {
-  const handleBorrow = (item) => {
-    Alert.alert('Success', `You have borrowed the ${item.name}.`);
-  };
+  const navigation = useNavigation(); // Use navigation hook
 
+  // Render each equipment item
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Image source={{ uri: item.image }} style={styles.itemImage} />
@@ -38,7 +37,7 @@ const BorrowScreen = () => {
         <Text style={styles.itemDetail}>{item.detail}</Text>
         <TouchableOpacity
           style={styles.borrowButton}
-          onPress={() => handleBorrow(item)}
+          onPress={() => navigation.navigate('BorrowDetail', { item })} // Navigate to BorrowDetail with item data
         >
           <Text style={styles.borrowText}>Borrow</Text>
         </TouchableOpacity>
