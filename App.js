@@ -32,11 +32,11 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {loggedIn ? (
-        <StackNavigator />
-      ) : (
-        <LoginScreen />
-      )}
+      
+        <StackNavigator loggedIn={loggedIn} />
+   
+        
+
     </NavigationContainer>
   );
 };

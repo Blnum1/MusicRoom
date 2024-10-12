@@ -14,6 +14,7 @@ import BookingDetail from "./screens/BookingDetail";
 import BorrowScreen from "./screens/BorrowScreen";
 import BorrowDetail from "./screens/BorrowDetail";
 import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from "./screens/RegisterScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -23,10 +24,10 @@ function BottomTabs() {
     <Tab.Navigator
       screenOptions={{
         tabBarStyle: {
-          height: 70, // ปรับความสูงของแท็บบาร์
-          paddingBottom: 10, // เพิ่ม padding ด้านล่างเพื่อเว้นระยะ
+          height: 70,
+          paddingBottom: 10,
         },
-        headerShown: false, // ซ่อน Header ของ Tab.Navigator
+        headerShown: false,
       }}
     >
       <Tab.Screen
@@ -72,19 +73,19 @@ function BottomTabs() {
   );
 }
 
-const StackNavigator = () => {
+const StackNavigator = ({ loggedIn }) => { // เพิ่ม loggedIn เพื่อใช้กำหนดเส้นทาง
   return (
     <Stack.Navigator
-      initialRouteName="Main"
+      initialRouteName={loggedIn ? "Main" : "Login"} // ตรวจสอบสถานะล็อกอินเพื่อตั้ง initialRoute
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#4CAF50", // สีพื้นหลังของ Header
+          backgroundColor: "#4CAF50",
         },
-        headerTintColor: "#fff", // สีของข้อความใน Header
+        headerTintColor: "#fff",
         headerTitleStyle: {
-          fontWeight: "bold", // ปรับแต่ง Style ของ Title
+          fontWeight: "bold",
         },
-        headerTitle: "Music Rooms", // ตั้งชื่อ Header ให้คงที่เป็น "Music Rooms"
+        headerTitle: "Music Rooms",
       }}
     >
       <Stack.Screen
@@ -113,10 +114,15 @@ const StackNavigator = () => {
         options={{ title: "Borrow Detail" }}
       />
       <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
+        name="Login"
+        component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

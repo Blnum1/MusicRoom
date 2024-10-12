@@ -1,50 +1,49 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useNavigation } from '@react-navigation/native';
+import { View, TextInput, Button, Alert, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase'; 
 
-const LoginScreen = () => {
+const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation(); 
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
+  const handleRegister = () => {
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log('Logged in with:', user.email);
+        console.log('Registered with:', user.email);
+        Alert.alert('Registration successful', 'You have been registered!');
         navigation.navigate('Main');
       })
       .catch((error) => {
-        Alert.alert('Login failed', error.message);
+        Alert.alert('Registration failed', error.message);
       });
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
         keyboardType="email-address"
+        style={styles.input}
       />
       <TextInput
-        style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={(text) => setPassword(text)}
         secureTextEntry
+        style={styles.input}
       />
-      <Button title="Login" onPress={handleLogin} />
-      
-      {/* ปุ่มสำหรับไปหน้า Register */}
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+      <Button title="Register" onPress={handleRegister} />
+
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.registerLink}>
-          Don't have an account? Register
+          Login
         </Text>
       </TouchableOpacity>
+
     </View>
   );
 };
@@ -69,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;
