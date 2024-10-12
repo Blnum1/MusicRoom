@@ -1,46 +1,49 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { collection, getDocs } from 'firebase/firestore'; // นำเข้าฟังก์ชัน Firestore
+import { db } from '../firebase'; // นำเข้าไฟล์ firebase ของคุณ
 
 const BookingScreen = () => {
   const navigation = useNavigation();
+  const [rooms, setRooms] = useState([]); // สถานะสำหรับเก็บข้อมูลห้อง
+
+  // ฟังก์ชันสำหรับดึงข้อมูลห้องจาก Firestore
+  const fetchRoomsFromDatabase = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'rooms'));
+      const roomsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setRooms(roomsData); // เก็บข้อมูลห้องใน state
+    } catch (error) {
+      console.error('Error fetching rooms: ', error);
+    }
+  };
+
+  // เรียกใช้งานฟังก์ชันเมื่อโหลดหน้า BookingScreen
+  useEffect(() => {
+    fetchRoomsFromDatabase();
+  }, []);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Select a Room Booking Slot</Text>
       <View style={styles.roomsContainer}>
-        {/* Room 1 */}
-        <View style={styles.roomCard}>
-          <Image 
-            source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzX9J_mHk97kurmw6l-yILcXjOzuJiVHb3fQ&s' }} // URL of the room image
-            style={styles.roomImage}
-          />
-          <Text style={styles.roomName}>Rehearsal Room 1</Text>
-          <Text style={styles.roomDetail}>This is a spacious room perfect for music rehearsals.</Text>
-          <TouchableOpacity 
-            style={styles.bookButton} 
-            onPress={() => navigation.navigate('BookingDetail', { roomName: 'Rehearsal Room 1' })} // Navigate to BookingDetail and pass roomName as a parameter
-          >
-            <Text style={styles.bookButtonText}>Select Time</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Room 2 */}
-        <View style={styles.roomCard}>
-          <Image 
-            source={{ uri: 'https://f.ptcdn.info/112/003/000/1363186454-L-o.jpg' }} // URL of the room image
-            style={styles.roomImage}
-          />
-          <Text style={styles.roomName}>Rehearsal Room 2</Text>
-          <Text style={styles.roomDetail}>A cozy room suitable for small groups.</Text>
-
-          <TouchableOpacity 
-            style={styles.bookButton} 
-            onPress={() => navigation.navigate('BookingDetail', { roomName: 'Rehearsal Room 2' })} // Navigate to BookingDetail and pass roomName as a parameter
-          >
-            <Text style={styles.bookButtonText}>Select Time</Text>
-          </TouchableOpacity>
-        </View>
+        {rooms.map((room) => (
+          <View key={room.id} style={styles.roomCard}>
+            <Image source={{ uri: room.roomImage }} style={styles.roomImage} />
+            <Text style={styles.roomName}>{room.roomName}</Text>
+            <Text style={styles.roomDetail}>{room.roomDetail}</Text>
+            <TouchableOpacity
+              style={styles.bookButton}
+              onPress={() => navigation.navigate('BookingDetail', { roomId: room.id, roomName: room.roomName })}
+            >
+              <Text style={styles.bookButtonText}>Select Time</Text>
+            </TouchableOpacity>
+          </View>
+        ))}
       </View>
     </ScrollView>
   );
