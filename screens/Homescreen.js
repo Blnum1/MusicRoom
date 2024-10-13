@@ -1,48 +1,53 @@
-// Homescreen.js
-import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView, Animated  } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView, Animated } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import BookingScreen from './BookingScreen';
 import BorrowScreen from './BorrowScreen';
-import Ionicons from '@expo/vector-icons/Ionicons'; 
+import Ionicons from '@expo/vector-icons/Ionicons';
 import Chatbot from './Chatbot';
+import { collection, getDocs } from 'firebase/firestore'; // นำเข้าฟังก์ชัน Firestore
+import { db } from '../firebase'; // นำเข้าไฟล์ firebase ของคุณ
 
 const Stack = createStackNavigator();
 
 const Homescreen = ({ navigation }) => {
+  const [rooms, setRooms] = useState([]); // เก็บข้อมูลห้องจาก Firestore
+  const [equipmentData, setEquipmentData] = useState([]); // เก็บข้อมูลอุปกรณ์จาก Firestore
   const scrollY = new Animated.Value(0);
-  const rooms = [
-    {
-      name: "Rehearsal Room 1",
-      detail: "A spacious room perfect for music .",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzX9J_mHk97kurmw6l-yILcXjOzuJiVHb3fQ&s",
-    },
-    {
-      name: "Rehearsal Room 2",
-      detail: "A cozy room suitable for small groups.",
-      image: "https://f.ptcdn.info/112/003/000/1363186454-L-o.jpg",
-    },
-  ];
-  const equipmentData = [
-    {
-      id: '1',
-      name: 'Microphone',
-      detail: 'High-quality microphone for recording.',
-      image: 'https://shop-image.readyplanet.com/8W-Fv3MmhxD7QzQWmH8JI6VVYs4=/e1758bc9cf1b4b529eafa3658cc22399', // เปลี่ยนเป็น URL ของรูป
-    },
-    {
-      id: '2',
-      name: 'Guitar',
-      detail: 'Acoustic guitar for music rehearsals.',
-      image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeO-VUs6h1v1XqCkhPMfYmtV9mVxv7yh4XTQ&s', // เปลี่ยนเป็น URL ของรูป
-    },
-    {
-      id: '3',
-      name: 'Keyboard',
-      detail: 'Electric keyboard for performances.',
-      image: 'https://m.media-amazon.com/images/I/71FobkNjTZL._AC_SL1500_.jpg', // เปลี่ยนเป็น URL ของรูป
-    },
-  ];
+
+  // ฟังก์ชันสำหรับดึงข้อมูลห้องจาก Firestore
+  const fetchRoomsFromDatabase = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'rooms'));
+      const roomsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setRooms(roomsData); // เก็บข้อมูลห้องใน state
+    } catch (error) {
+      console.error('Error fetching rooms: ', error);
+    }
+  };
+
+  // ฟังก์ชันสำหรับดึงข้อมูลอุปกรณ์จาก Firestore
+  const fetchEquipmentData = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'equipment'));
+      const equipmentList = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setEquipmentData(equipmentList); // เก็บข้อมูลอุปกรณ์ใน state
+    } catch (error) {
+      console.error('Error fetching equipment data: ', error);
+    }
+  };
+
+  // เรียกใช้เมื่อหน้าโหลด
+  useEffect(() => {
+    fetchRoomsFromDatabase();
+    fetchEquipmentData();
+  }, []);
 
   const fabPosition = scrollY.interpolate({
     inputRange: [0, 100],
@@ -52,66 +57,52 @@ const Homescreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Animated.ScrollView 
+      <Animated.ScrollView
         style={styles.verticalScrollView}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
-        )}
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
         scrollEventThrottle={16}
       >
 
+        {/* ปุ่มไปยังหน้า Booking และ Borrow */}
         <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Booking')}
-          >
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Booking')}>
             <Text style={styles.buttonText}>Go to Booking</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Borrow')}
-          >
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Borrow')}>
             <Text style={styles.buttonText}>Go to Borrow</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.container}>
-          <Image 
-            source={{ uri: 'https://png.pngtree.com/png-vector/20190115/ourmid/pngtree-bar-chart-classification-classification-label-ratio-chart-png-image_356574.jpg' }} 
-            style={styles.imageStyle} 
-          />
+        <View>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Chatbot')}>
+            <Text style={styles.buttonText}>Go to Chatbot</Text>
+          </TouchableOpacity>
         </View>
 
+        {/* Section สำหรับแสดงห้อง */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionHeaderText}>Music Rooms</Text>
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.roomsContainer}>
           {rooms.map((room, index) => (
-            <TouchableOpacity
-              style={styles.roomCard}
-              key={index}
-              onPress={() => navigation.navigate('Booking')}
-            >
-              <Image source={{ uri: room.image }} style={styles.roomImage} />
-              <Text style={styles.roomName}>{room.name}</Text>
-              <Text style={styles.roomDetail}>{room.detail}</Text>
+            <TouchableOpacity style={styles.roomCard} key={index} onPress={() => navigation.navigate('Booking')}>
+              <Image source={{ uri: room.roomImage }} style={styles.roomImage} />
+              <Text style={styles.roomName}>{room.roomName}</Text>
+              <Text style={styles.roomDetail}>{room.roomDetail}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
 
+        {/* Section สำหรับแสดงอุปกรณ์ */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionHeaderText}>Equipment</Text>
         </View>
+
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.roomsContainer}>
           {equipmentData.map((equipment, index) => (
-            <TouchableOpacity
-              style={styles.equipCard}
-              key={index}
-              onPress={() => navigation.navigate('Borrow')}
-            >
+            <TouchableOpacity style={styles.equipCard} key={index} onPress={() => navigation.navigate('Borrow')}>
               <Image source={{ uri: equipment.image }} style={styles.roomImage} />
               <Text style={styles.roomName}>{equipment.name}</Text>
               <Text style={styles.roomDetail}>{equipment.detail}</Text>
@@ -122,9 +113,7 @@ const Homescreen = ({ navigation }) => {
       </Animated.ScrollView>
 
       <Animated.View style={[styles.fab, { transform: [{ translateY: fabPosition }] }]}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Chatbot')}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate('Chatbot')}>
           <Ionicons name="add" size={24} color="#fff" />
         </TouchableOpacity>
       </Animated.View>
@@ -168,6 +157,7 @@ const styles = StyleSheet.create({
   },
   roomCard: {
     width: 300, // กำหนดความกว้างของกล่อง
+    height: 225,
     backgroundColor: '#fff',
     borderRadius: 5,
     elevation: 2,
@@ -256,17 +246,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-// สร้าง Stack Navigator สำหรับหน้า Booking และ Borrow
-const HomescreenStack = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={Homescreen} />
-      <Stack.Screen name="Booking" component={BookingScreen} />
-      <Stack.Screen name="Borrow" component={BorrowScreen} />
-      <Stack.Screen name="Chatbot" component={Chatbot} />
-    </Stack.Navigator>
-  );
-};
-
-export default HomescreenStack;
+export default Homescreen;

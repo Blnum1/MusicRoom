@@ -2,18 +2,29 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-import { auth } from '../firebase'; 
+import { auth } from '../firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // นำเข้า AsyncStorage
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
         console.log('Logged in with:', user.email);
+
+        // เก็บอีเมลของผู้ใช้ใน AsyncStorage
+        try {
+          await AsyncStorage.setItem('userEmail', user.email);
+          console.log('Email saved to AsyncStorage');
+        } catch (error) {
+          console.error('Error saving email:', error);
+        }
+
+        // นำทางไปหน้า Main หลังจากล็อกอินสำเร็จ
         navigation.navigate('Main');
       })
       .catch((error) => {

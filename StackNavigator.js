@@ -15,6 +15,7 @@ import BorrowScreen from "./screens/BorrowScreen";
 import BorrowDetail from "./screens/BorrowDetail";
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from "./screens/RegisterScreen";
+import Chatbot from "./screens/Chatbot";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -122,6 +123,11 @@ const StackNavigator = ({ loggedIn }) => { // เพิ่ม loggedIn เพื
         name="Register"
         component={RegisterScreen}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Chatbot"
+        component={Chatbot}
+        options={{ headerShown: true }}
       />
     </Stack.Navigator>
   );
