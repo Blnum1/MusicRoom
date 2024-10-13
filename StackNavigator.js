@@ -13,9 +13,14 @@ import BookingScreen from "./screens/BookingScreen";
 import BookingDetail from "./screens/BookingDetail";
 import BorrowScreen from "./screens/BorrowScreen";
 import BorrowDetail from "./screens/BorrowDetail";
-import LoginScreen from './screens/LoginScreen';
+import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import Chatbot from "./screens/Chatbot";
+import AdminDashboard from "./screens/AdminDashboard";
+import ManageBookings from "./screens/ManageBookings";
+import ManageBorrowHistory from "./screens/ManageBorrowHistory";
+import ManageRooms from "./screens/ManageRooms";
+import ManageEquipment from "./screens/ManageEquipment";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -74,7 +79,8 @@ function BottomTabs() {
   );
 }
 
-const StackNavigator = ({ loggedIn }) => { // เพิ่ม loggedIn เพื่อใช้กำหนดเส้นทาง
+const StackNavigator = ({ loggedIn }) => {
+  // เพิ่ม loggedIn เพื่อใช้กำหนดเส้นทาง
   return (
     <Stack.Navigator
       initialRouteName={loggedIn ? "Main" : "Login"} // ตรวจสอบสถานะล็อกอินเพื่อตั้ง initialRoute
@@ -129,6 +135,11 @@ const StackNavigator = ({ loggedIn }) => { // เพิ่ม loggedIn เพื
         component={Chatbot}
         options={{ headerShown: true }}
       />
+      <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+      <Stack.Screen name="ManageBookings" component={ManageBookings} />
+      <Stack.Screen name="ManageBorrowHistory" component={ManageBorrowHistory} />
+      <Stack.Screen name="ManageRooms" component={ManageRooms} />
+      <Stack.Screen name="ManageEquipment" component={ManageEquipment} />
     </Stack.Navigator>
   );
 };

@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView, Animated } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import BookingScreen from './BookingScreen';
-import BorrowScreen from './BorrowScreen';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import Chatbot from './Chatbot';
-import { collection, getDocs } from 'firebase/firestore'; // นำเข้าฟังก์ชัน Firestore
-import { db } from '../firebase'; // นำเข้าไฟล์ firebase ของคุณ
-
-const Stack = createStackNavigator();
+import { View, StyleSheet, TouchableOpacity, Text, Image, ScrollView, Animated, Button } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore'; // นำเข้าฟังก์ชัน Firestore
+import { db, auth } from '../firebase'; // นำเข้า Firebase
+import AsyncStorage from '@react-native-async-storage/async-storage'; // สำหรับดึง email ของผู้ใช้
 
 const Homescreen = ({ navigation }) => {
   const [rooms, setRooms] = useState([]); // เก็บข้อมูลห้องจาก Firestore
   const [equipmentData, setEquipmentData] = useState([]); // เก็บข้อมูลอุปกรณ์จาก Firestore
+  const [isAdmin, setIsAdmin] = useState(false); // เก็บสถานะว่าเป็น admin หรือไม่
   const scrollY = new Animated.Value(0);
 
   // ฟังก์ชันสำหรับดึงข้อมูลห้องจาก Firestore
@@ -43,10 +39,32 @@ const Homescreen = ({ navigation }) => {
     }
   };
 
+  // ตรวจสอบบทบาทผู้ใช้ (Admin หรือไม่)
+  const checkAdminRole = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        // ดึงข้อมูลผู้ใช้จาก Firestore โดยใช้ uid
+        const docRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          if (userData.role === 'admin') {
+            setIsAdmin(true); // ถ้าเป็น admin ให้แสดงปุ่ม
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error checking admin role:', error);
+    }
+  };
+
   // เรียกใช้เมื่อหน้าโหลด
   useEffect(() => {
     fetchRoomsFromDatabase();
     fetchEquipmentData();
+    checkAdminRole(); // ตรวจสอบบทบาทผู้ใช้
   }, []);
 
   const fabPosition = scrollY.interpolate({
@@ -62,7 +80,15 @@ const Homescreen = ({ navigation }) => {
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
         scrollEventThrottle={16}
       >
-
+{/* ปุ่มสำหรับแอดมิน */}
+{isAdmin && (
+          <View style={styles.adminContainer}>
+            <Button
+              title="Admin Dashboard"
+              onPress={() => navigation.navigate('AdminDashboard')}
+            />
+          </View>
+        )}
         {/* ปุ่มไปยังหน้า Booking และ Borrow */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Booking')}>
@@ -75,7 +101,7 @@ const Homescreen = ({ navigation }) => {
         </View>
 
         <View>
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Chatbot')}>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Chatbot')}>
             <Text style={styles.buttonText}>Go to Chatbot</Text>
           </TouchableOpacity>
         </View>
@@ -110,6 +136,8 @@ const Homescreen = ({ navigation }) => {
           ))}
         </ScrollView>
 
+        
+
       </Animated.ScrollView>
 
       <Animated.View style={[styles.fab, { transform: [{ translateY: fabPosition }] }]}>
@@ -131,7 +159,7 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    bottom: 40, // ปรับค่าตรงนี้ให้อยู่สูงขึ้นจากเดิม
+    bottom: 40,
     right: 20,
     backgroundColor: '#28a745',
     width: 60,
@@ -141,47 +169,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
   },
-  
-  imageStyle: {
-    width: 380, // กำหนดความกว้างของรูปภาพ
-    height: 200, // กำหนดความสูงของรูปภาพ
-    borderRadius: 8, // มุมโค้งมน
-    resizeMode: 'cover', // ปรับให้รูปภาพแสดงแบบเต็มพื้นที่กล่อง
-  },
-  
   roomsContainer: {
-    flexDirection: 'row', // จัดเรียงห้องในแนวนอน
+    flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
-    
   },
   roomCard: {
-    width: 300, // กำหนดความกว้างของกล่อง
+    width: 300,
     height: 225,
     backgroundColor: '#fff',
     borderRadius: 5,
     elevation: 2,
     padding: 10,
     marginHorizontal: 10,
-    alignItems: 'flex-start', // จัดกลางเนื้อหาภายในกล่อง
-    borderWidth: 2, // ความหนาของกรอบ
+    alignItems: 'flex-start',
+    borderWidth: 2,
     borderColor: '#ccc',
   },
   equipCard: {
-    width: 200, // กำหนดความกว้างของกล่อง
+    width: 200,
     backgroundColor: '#fff',
     borderRadius: 5,
     elevation: 2,
     padding: 10,
     marginHorizontal: 10,
-    alignItems: 'center', // จัดกลางเนื้อหาภายในกล่อง
+    alignItems: 'center',
   },
   roomImage: {
-    width: '100%', // ปรับขนาดรูปภาพให้เต็มความกว้างของกล่อง
-    height: 120, // ตั้งค่าความสูงคงที่ของรูปภาพ
+    width: '100%',
+    height: 120,
     borderRadius: 8,
     marginBottom: 10,
-    resizeMode: 'cover', // ปรับการแสดงผลของรูปภาพให้คงอัตราส่วน
+    resizeMode: 'cover',
   },
   roomName: {
     fontSize: 18,
@@ -193,23 +212,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
   },
-  bookingButton: {
-    backgroundColor: '#28a745',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-    alignSelf: 'flex-end',
+  sectionHeader: {
+    marginTop: 20,
+    marginBottom: 10,
+    marginLeft: 50,
+    width: '100%',
+    alignItems: 'flex-start',
   },
-  bookingButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-  },
-  borrowButton: {
-    backgroundColor: '#28a745',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
-    
+  sectionHeaderText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -224,25 +237,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
     borderRadius: 5,
     elevation: 3,
-    borderWidth: 2, // ความหนาของกรอบ
+    borderWidth: 2,
     borderColor: '#ccc',
   },
   buttonText: {
-    
     fontSize: 16,
     textAlign: 'center',
   },
-  sectionHeader: {
-    marginTop: 20,
-    marginBottom: 10,
-    marginLeft : 50,
-    width: '100%',
-    alignItems: 'flex-start',
-  },
-  sectionHeaderText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
+  adminContainer: {
+    marginVertical: 20,
+    alignItems: 'center',
   },
 });
 

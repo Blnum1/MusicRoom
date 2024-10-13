@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Alert, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; 
+import { auth, db } from '../firebase'; // นำเข้า Firestore
+import { doc, setDoc } from 'firebase/firestore'; // ใช้ในการบันทึกข้อมูลใน Firestore
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log('Registered with:', user.email);
-        Alert.alert('Registration successful', 'You have been registered!');
-        navigation.navigate('Main');
-      })
-      .catch((error) => {
-        Alert.alert('Registration failed', error.message);
+  const handleRegister = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      console.log('Registered with:', user.email);
+
+      // บันทึกข้อมูลผู้ใช้ลงใน Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        email: user.email,
+        role: 'user', // กำหนดบทบาทเริ่มต้นเป็น 'user'
       });
+
+      Alert.alert('Registration successful', 'You have been registered!');
+      navigation.navigate('Main');
+    } catch (error) {
+      Alert.alert('Registration failed', error.message);
+    }
   };
 
   return (
@@ -40,10 +47,9 @@ const RegisterScreen = ({ navigation }) => {
 
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles.registerLink}>
-          Login
+          Already have an account? Login
         </Text>
       </TouchableOpacity>
-
     </View>
   );
 };
