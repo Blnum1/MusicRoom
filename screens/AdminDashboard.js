@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import { auth, db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
@@ -37,22 +37,18 @@ const AdminDashboard = () => {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Admin Dashboard</Text>
       
-      {/* ปุ่มสำหรับดูและจัดการข้อมูลการจอง */}
       <TouchableOpacity style={styles.adminButton} onPress={() => navigation.navigate('ManageBookings')}>
         <Text style={styles.buttonText}>Manage Bookings</Text>
       </TouchableOpacity>
       
-      {/* ปุ่มสำหรับดูและจัดการประวัติการยืม */}
       <TouchableOpacity style={styles.adminButton} onPress={() => navigation.navigate('ManageBorrowHistory')}>
         <Text style={styles.buttonText}>Manage Borrow History</Text>
       </TouchableOpacity>
 
-      {/* ปุ่มสำหรับดูและจัดการข้อมูลห้อง */}
       <TouchableOpacity style={styles.adminButton} onPress={() => navigation.navigate('ManageRooms')}>
         <Text style={styles.buttonText}>Manage Rooms</Text>
       </TouchableOpacity>
 
-      {/* ปุ่มสำหรับดูและจัดการอุปกรณ์ */}
       <TouchableOpacity style={styles.adminButton} onPress={() => navigation.navigate('ManageEquipment')}>
         <Text style={styles.buttonText}>Manage Equipment</Text>
       </TouchableOpacity>
@@ -67,25 +63,34 @@ const styles = StyleSheet.create({
     padding: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#f5f6fa', // เปลี่ยนพื้นหลังให้เป็นสีอ่อน
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: '#2c3e50',
+    marginBottom: 30, // เพิ่มระยะห่างจากหัวข้อและปุ่ม
   },
   adminButton: {
-    backgroundColor: '#3498db',
-    paddingVertical: 12,
+    backgroundColor: '#3498db', // ปุ่มสีฟ้า
+    paddingVertical: 15, // เพิ่มขนาดของปุ่ม
     paddingHorizontal: 24,
-    borderRadius: 5,
+    borderRadius: 8, // ทำให้มุมของปุ่มโค้งมนขึ้น
     marginBottom: 15,
     alignItems: 'center',
-    width: '80%',
+    width: '80%', // ทำให้ปุ่มกว้างขึ้น
+    elevation: 5, // เพิ่มเงาให้ปุ่มเพื่อความนูน
+    shadowColor: '#000', 
+    shadowOffset: { width: 2, height: 2 }, 
+    shadowOpacity: 0.3, 
+    shadowRadius: 4, 
   },
   buttonText: {
-    color: '#fff',
+    color: '#fff', // ข้อความสีขาว
     fontSize: 18,
     fontWeight: 'bold',
+    textTransform: 'uppercase', // ทำให้ข้อความเป็นตัวพิมพ์ใหญ่ทั้งหมด
+    letterSpacing: 1, // เพิ่มการเว้นระยะระหว่างตัวอักษร
   },
 });
 

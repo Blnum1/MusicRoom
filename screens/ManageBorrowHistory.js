@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, FlatList, StyleSheet, Alert } from 'react-native';
 import { db } from '../firebase';
-import { collection, getDocs, deleteDoc, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, updateDoc, doc, getDoc } from 'firebase/firestore';
 
 const ManageBorrowHistory = () => {
   const [borrowHistory, setBorrowHistory] = useState([]);
@@ -24,15 +24,15 @@ const ManageBorrowHistory = () => {
     fetchBorrowHistory();
   }, []);
 
-  // ฟังก์ชันสำหรับลบประวัติการยืมและเพิ่ม stock กลับ
-  const handleDeleteBorrow = async (id, equipmentId) => {
+  // ฟังก์ชันสำหรับคืนอุปกรณ์และเพิ่ม stock กลับ
+  const handleReturnBorrow = async (id, equipmentId) => {
     Alert.alert(
-      "Delete Confirmation",
-      "Are you sure you want to delete this borrow history? The equipment stock will be increased.",
+      "Return Confirmation",
+      "Are you sure you want to mark this equipment as returned? The equipment stock will be increased.",
       [
         { text: "Cancel", style: "cancel" },
         {
-          text: "Delete",
+          text: "Return",
           onPress: async () => {
             try {
               // ดึงข้อมูลของอุปกรณ์ที่เกี่ยวข้องกับการยืม
@@ -46,16 +46,20 @@ const ManageBorrowHistory = () => {
                 // อัปเดต stock ของอุปกรณ์
                 await updateDoc(equipmentRef, { stock: newStock.toString() });
 
-                // ลบประวัติการยืมออกจาก Firestore
-                await deleteDoc(doc(db, 'borrowHistory', id));
-                setBorrowHistory(borrowHistory.filter((history) => history.id !== id));
+                // อัปเดตสถานะการยืมเป็น 'returned'
+                const borrowRef = doc(db, 'borrowHistory', id);
+                await updateDoc(borrowRef, { status: 'returned', returnTimestamp: new Date() });
 
-                Alert.alert('Borrow history deleted and stock updated successfully');
+                setBorrowHistory(borrowHistory.map((item) =>
+                  item.id === id ? { ...item, status: 'returned' } : item
+                ));
+
+                Alert.alert('Success', `Equipment returned successfully. Stock is now: ${newStock}`);
               } else {
                 Alert.alert('Error', 'Equipment not found');
               }
             } catch (error) {
-              console.error('Error updating stock or deleting borrow history:', error);
+              console.error('Error returning equipment:', error);
             }
           }
         }
@@ -67,7 +71,7 @@ const ManageBorrowHistory = () => {
     <View style={styles.container}>
       {/* แสดงรายการประวัติการยืม */}
       <FlatList
-        data={borrowHistory}
+        data={borrowHistory.filter(item => item.status === 'active')} // แสดงเฉพาะการยืมที่ยัง active
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.itemContainer}>
@@ -79,9 +83,9 @@ const ManageBorrowHistory = () => {
               </Text>
             </View>
             <Button
-              title="Delete"
-              color="#e74c3c"
-              onPress={() => handleDeleteBorrow(item.id, item.equipmentId)} // ส่ง equipmentId ไปให้ฟังก์ชัน
+              title="Return"
+              color="#2ecc71"
+              onPress={() => handleReturnBorrow(item.id, item.equipmentId)} // ส่ง equipmentId และ borrowId ไปให้ฟังก์ชัน
             />
           </View>
         )}

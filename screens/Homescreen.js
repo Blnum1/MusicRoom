@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore'; // นำเข้าฟังก์ชัน Firestore
 import { db, auth } from '../firebase'; // นำเข้า Firebase
 import AsyncStorage from '@react-native-async-storage/async-storage'; // สำหรับดึง email ของผู้ใช้
+import { VictoryBar, VictoryChart, VictoryTheme, VictoryAxis } from 'victory-native';
 
 const Homescreen = ({ navigation }) => {
   const [rooms, setRooms] = useState([]); // เก็บข้อมูลห้องจาก Firestore
@@ -82,12 +83,15 @@ const Homescreen = ({ navigation }) => {
       >
 {/* ปุ่มสำหรับแอดมิน */}
 {isAdmin && (
-          <View style={styles.adminContainer}>
-            <Button
-              title="Admin Dashboard"
-              onPress={() => navigation.navigate('AdminDashboard')}
-            />
-          </View>
+         <View style={styles.adminContainer}>
+         <TouchableOpacity
+           style={styles.adminButton} 
+           onPress={() => navigation.navigate('AdminDashboard')}
+         >
+           <Text style={styles.adminButtonText}>Admin Dashboard</Text>
+         </TouchableOpacity>
+       </View>
+       
         )}
         {/* ปุ่มไปยังหน้า Booking และ Borrow */}
         <View style={styles.buttonContainer}>
@@ -105,6 +109,14 @@ const Homescreen = ({ navigation }) => {
             <Text style={styles.buttonText}>Go to Chatbot</Text>
           </TouchableOpacity>
         </View>
+
+        <View>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ChartScreen')}>
+            <Text style={styles.buttonText}>Chart</Text>
+          </TouchableOpacity>
+        </View>
+        
+        
 
         {/* Section สำหรับแสดงห้อง */}
         <View style={styles.sectionHeader}>
@@ -245,8 +257,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   adminContainer: {
-    marginVertical: 20,
+    width: '100%', // ให้ครอบคลุมความกว้างของหน้าจอ
+    justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: 10, // เพิ่มระยะห่างแนวตั้ง
+  },
+  adminButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 15,
+    paddingHorizontal: 50, // ขนาด padding แนวนอน
+    borderRadius: 5,
+    width: '90%', // ปรับความกว้างของปุ่มเป็น 80% ของหน้าจอ
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  adminButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

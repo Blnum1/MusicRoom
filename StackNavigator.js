@@ -21,6 +21,8 @@ import ManageBookings from "./screens/ManageBookings";
 import ManageBorrowHistory from "./screens/ManageBorrowHistory";
 import ManageRooms from "./screens/ManageRooms";
 import ManageEquipment from "./screens/ManageEquipment";
+import ChartScreen from "./screens/ChartScreen";
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -140,6 +142,7 @@ const StackNavigator = ({ loggedIn }) => {
       <Stack.Screen name="ManageBorrowHistory" component={ManageBorrowHistory} />
       <Stack.Screen name="ManageRooms" component={ManageRooms} />
       <Stack.Screen name="ManageEquipment" component={ManageEquipment} />
+      <Stack.Screen name="ChartScreen" component={ChartScreen} />
     </Stack.Navigator>
   );
 };
