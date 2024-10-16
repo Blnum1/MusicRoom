@@ -154,7 +154,7 @@ const Homescreen = ({ navigation }) => {
 
       <Animated.View style={[styles.fab, { transform: [{ translateY: fabPosition }] }]}>
         <TouchableOpacity onPress={() => navigation.navigate('Chatbot')}>
-          <Ionicons name="add" size={24} color="#fff" />
+          <Ionicons name="logo-android" size={24} color="#fff" />
         </TouchableOpacity>
       </Animated.View>
     </View>

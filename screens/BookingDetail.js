@@ -77,12 +77,15 @@ const BookingDetail = () => {
   };
 
   const timeSlots = [
-    { label: '9:00 AM', value: '9:00 AM' },
-    { label: '10:00 AM', value: '10:00 AM' },
-    { label: '11:00 AM', value: '11:00 AM' },
-    { label: '12:00 PM', value: '12:00 PM' },
-    { label: '1:00 PM', value: '1:00 PM' },
-    { label: '2:00 PM', value: '2:00 PM' },
+    { label: '6:00 AM - 8:00 AM', value: '6:00 AM' },
+    { label: '8:00 AM - 10:00 AM', value: '8:00 AM' },
+    { label: '10:00 AM - 12:00 PM', value: '10:00 AM' },
+    { label: '12:00 PM - 2:00 PM', value: '12:00 PM' },
+    { label: '2:00 PM - 4:00 PM', value: '2:00 PM' },
+    { label: '4:00 PM - 6:00 PM', value: '4:00 PM' },
+    { label: '6:00 PM - 8:00 PM', value: '6:00 PM' },
+    { label: '8:00 PM - 10:00 PM', value: '8:00 PM' },
+    { label: '10:00 PM - 12:00 AM', value: '10:00 PM' },
   ];
 
   const isSlotBooked = (slot) => bookedSlots.includes(slot);
