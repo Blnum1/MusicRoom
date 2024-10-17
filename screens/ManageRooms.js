@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   },
   roomContainer: {
     backgroundColor: '#f8f9fa',
-    padding: 15,
+    padding: 6,
     marginVertical: 5,
     borderRadius: 5,
     flexDirection: 'row',

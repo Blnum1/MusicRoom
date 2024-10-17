@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   detail: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 25,
     alignSelf: 'flex-start',
   },
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+ 
   availableSlot: {
     backgroundColor: '#ffffff',
   },
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
   },
   timeSlotText: {
     color: '#000',
-    fontSize: 16,
+    fontSize: 12,
   },
   confirmButton: {
     backgroundColor: '#4CAF50',

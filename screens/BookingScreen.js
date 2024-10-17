@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   roomCard: {
-    width: '90%',
+    width: '100%',
     backgroundColor: '#fff',
     borderRadius: 8,
     marginVertical: 10,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   roomDetail: {
-    fontSize: 16,
+    fontSize: 12,
     textAlign: 'left',
   },
   bookButton: {

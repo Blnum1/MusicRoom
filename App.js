@@ -35,8 +35,6 @@ const App = () => {
       
         <StackNavigator loggedIn={loggedIn} />
    
-        
-
     </NavigationContainer>
   );
 };

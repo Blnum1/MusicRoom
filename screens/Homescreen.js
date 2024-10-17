@@ -96,23 +96,27 @@ const Homescreen = ({ navigation }) => {
         {/* ปุ่มไปยังหน้า Booking และ Borrow */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Booking')}>
-            <Text style={styles.buttonText}>Go to Booking</Text>
+            <Text style={styles.buttonStart}>Booking Rooms</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Borrow')}>
-            <Text style={styles.buttonText}>Go to Borrow</Text>
+            <Text style={styles.buttonStart}>Borrow</Text>
           </TouchableOpacity>
         </View>
 
         <View>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Chatbot')}>
-            <Text style={styles.buttonText}>Go to Chatbot</Text>
+            
+            <Text style={styles.buttonText}>Chatbot</Text>
+            <Text style={styles.buttonDeatail}>Chat can help!</Text>
+            
           </TouchableOpacity>
         </View>
 
         <View>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ChartScreen')}>
             <Text style={styles.buttonText}>Chart</Text>
+            <Text style={styles.buttonDeatail}>All statistics!</Text>
           </TouchableOpacity>
         </View>
         
@@ -120,7 +124,7 @@ const Homescreen = ({ navigation }) => {
 
         {/* Section สำหรับแสดงห้อง */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionHeaderText}>Music Rooms</Text>
+          <Text style={styles.sectionHeaderText}>Booking Rooms</Text>
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.roomsContainer}>
@@ -135,7 +139,7 @@ const Homescreen = ({ navigation }) => {
 
         {/* Section สำหรับแสดงอุปกรณ์ */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionHeaderText}>Equipment</Text>
+          <Text style={styles.sectionHeaderText}>Borrow Equipment</Text>
         </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.roomsContainer}>
@@ -185,10 +189,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
+    
   },
   roomCard: {
     width: 300,
-    height: 225,
+    height: 250,
     backgroundColor: '#fff',
     borderRadius: 5,
     elevation: 2,
@@ -197,15 +202,21 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     borderWidth: 2,
     borderColor: '#ccc',
+    backgroundColor: '#FAFFFF',
   },
   equipCard: {
     width: 200,
+    height: 250,
     backgroundColor: '#fff',
     borderRadius: 5,
     elevation: 2,
     padding: 10,
     marginHorizontal: 10,
     alignItems: 'center',
+    backgroundColor: '#FAFFFF',
+    borderWidth: 2,
+    borderColor: '#ccc',
+    backgroundColor: '#FAFFFF',
   },
   roomImage: {
     width: '100%',
@@ -220,14 +231,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   roomDetail: {
-    fontSize: 14,
+    fontSize: 10,
     marginBottom: 10,
     textAlign: 'center',
   },
   sectionHeader: {
     marginTop: 20,
     marginBottom: 10,
-    marginLeft: 50,
+    marginLeft: 20,
     width: '100%',
     alignItems: 'flex-start',
   },
@@ -243,17 +254,26 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   button: {
-    backgroundColor: '#ffffff',
-    paddingVertical: 30,
+    backgroundColor: '#FAFFFF',
+    paddingVertical: 20,
     flex: 1,
     marginHorizontal: 2,
     borderRadius: 5,
     elevation: 3,
-    borderWidth: 2,
-    borderColor: '#ccc',
+    borderWidth: 2, 
+    borderColor: '#05675E', 
+    marginBottom: 4,
   },
   buttonText: {
     fontSize: 16,
+    textAlign: 'center',
+  },
+  buttonStart: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  buttonDeatail: {
+    fontSize: 10,
     textAlign: 'center',
   },
   adminContainer: {
@@ -263,11 +283,11 @@ const styles = StyleSheet.create({
     marginVertical: 10, // เพิ่มระยะห่างแนวตั้ง
   },
   adminButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#05675E',
     paddingVertical: 15,
     paddingHorizontal: 50, // ขนาด padding แนวนอน
     borderRadius: 5,
-    width: '90%', // ปรับความกว้างของปุ่มเป็น 80% ของหน้าจอ
+    width: '95%', // ปรับความกว้างของปุ่มเป็น 80% ของหน้าจอ
     justifyContent: 'center',
     alignItems: 'center',
   },

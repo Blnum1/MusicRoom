@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f6fa', // เปลี่ยนพื้นหลังให้เป็นสีอ่อน
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#2c3e50',
     marginBottom: 30, // เพิ่มระยะห่างจากหัวข้อและปุ่ม
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     borderRadius: 8, // ทำให้มุมของปุ่มโค้งมนขึ้น
     marginBottom: 15,
     alignItems: 'center',
-    width: '80%', // ทำให้ปุ่มกว้างขึ้น
+    width: '90%', // ทำให้ปุ่มกว้างขึ้น
     elevation: 5, // เพิ่มเงาให้ปุ่มเพื่อความนูน
     shadowColor: '#000', 
     shadowOffset: { width: 2, height: 2 }, 
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff', // ข้อความสีขาว
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: 'bold',
     textTransform: 'uppercase', // ทำให้ข้อความเป็นตัวพิมพ์ใหญ่ทั้งหมด
     letterSpacing: 1, // เพิ่มการเว้นระยะระหว่างตัวอักษร

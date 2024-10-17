@@ -88,7 +88,7 @@ const StackNavigator = ({ loggedIn }) => {
       initialRouteName={loggedIn ? "Main" : "Login"} // ตรวจสอบสถานะล็อกอินเพื่อตั้ง initialRoute
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#4CAF50",
+          backgroundColor: "#05675E",
         },
         headerTintColor: "#fff",
         headerTitleStyle: {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, FlatList, TextInput, StyleSheet, Alert } from 'react-native';
 import { db } from '../firebase';
-import { collection, getDocs, deleteDoc, doc, updateDoc, addDoc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc,setDoc, addDoc } from 'firebase/firestore';
 
 const ManageEquipment = () => {
   const [equipment, setEquipment] = useState([]);
@@ -64,8 +64,9 @@ const ManageEquipment = () => {
           id: newEquipmentId,
           stock: newEquipmentStock,
         };
-        const docRef = await addDoc(collection(db, 'equipment'), newEquipment);
-        setEquipment([...equipment, { id: docRef.id, ...newEquipment }]);
+        const equipmentRef = doc(db, 'equipment', newEquipmentId); // Specify the document ID here
+        await setDoc(equipmentRef, newEquipment); // Use setDoc to set the document with the specified ID
+        setEquipment([...equipment, { id: newEquipmentId, ...newEquipment }]);
         setNewEquipmentName('');
         setNewEquipmentDetail('');
         setNewEquipmentImage('');
@@ -192,10 +193,10 @@ const ManageEquipment = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 8,
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 20,
   },
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 12,
+    marginBottom: 8,
     paddingHorizontal: 10,
   },
   equipmentContainer: {
